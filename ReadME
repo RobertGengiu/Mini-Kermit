@@ -1,0 +1,31 @@
+>>>>>>>>>>>>>>>>>>>>>>>>>|> Tema 1 - Mini-Kermit <|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Pentru a retine informatiile cat mai usor am creat structurile MPackage si
+DataSendInit, pe care le-am alocat in functie de caz.
+
+Algoritmul folosit pentru retransmisie:
+
+Din partea sender-ului
+
+Sender-ul transmite un pachet si asteapta 3 intervale de timp sa primeasca
+un raspuns fie de ACK, fie de NACK. Daca primim un mesaj, prima data ii
+verificam secventa, daca secventa corespunde cu cea veche, retransmitem mesajul,
+indiferent daca e ACK sau NACK. Altefel incrementam numarul de secventa si facem
+verificari daca pachetul transmis catre recevier a intors un ACK sau un NACK.
+Daca a fost ACK, atunci pachetul a ajuns intact la recevier si astfel s-a
+terminat algoritmul, iar daca a fost NACK, actualizam secventa, recalculam
+campul check si transmitem pachetul.
+
+Din partea recevier-ului
+
+Asteapta maxim 4 intervale de timp, unul pentru transmitere si restul pentru
+cele 3 retransmiteri. Daca a pimit un mesaj nenul, atunci face verificari
+daca e corupt sau nu. In caz afirmativ trimite un NACK, iar in caz negativ,
+trece la evaluatera tipului de pachet si trimite un ACK. Nu este necesar sa
+calculeze crc pentru mesajele de confirmare, ci doar sa intoarca secventa
+corespunzatoare. In caz de timeout va retransmite ultimul ACK/NACK, cu
+secventa intacta, exceptie face pachetul Send-Init, unde nu are ce sa transmita
+inapoi.
+
+Realizat de: Gengiu Robert-Constantin
+Grupa: 322 CB
